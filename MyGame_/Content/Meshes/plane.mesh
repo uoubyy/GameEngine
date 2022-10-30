@@ -1,0 +1,17 @@
+-- 4 vertices
+-- 2 triangles
+return
+{
+	vertices =
+	{
+		{ position = { -5, 0, 5}, normal = { 0, 1, 0 }, tangent = { 1, -0, 0 }, bitangent = { 0, 0, -1 }, uv = { 0, 0 }, color = { 1, 0, 0, 1 }, mat = 0, },
+		{ position = { 5, 0, 5}, normal = { 0, 1, 0 }, tangent = { 1, 0, 0 }, bitangent = { 0, 0, -1 }, uv = { 1, 0 }, color = { 1, 0, 1, 1 }, mat = 0, },
+		{ position = { -5, 0, -5}, normal = { 0, 1, 0 }, tangent = { 1, 0, 0 }, bitangent = { 0, 0, -1 }, uv = { 0, 1 }, color = { 0, 1, 0, 1 }, mat = 0, },
+		{ position = { 5, 0, -5}, normal = { 0, 1, 0 }, tangent = { 1, 0, 0 }, bitangent = { 0, 0, -1 }, uv = { 1, 1 }, color = { 0, 0, 1, 1 }, mat = 0, },
+	},
+	elements =
+	{
+		{ 0, 2, 1 },
+		{ 2, 3, 1 },
+	},
+}

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Component">
+      <UniqueIdentifier>{c08e4019-f0cc-474e-b7ae-2ae62384f6f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameobject">
+      <UniqueIdentifier>{f6a06b1a-ead1-42a4-b7b5-cb5c99f66b20}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Component\cMovementComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\iComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameobject\iGameobject.cpp">
+      <Filter>Gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameobject\cCamera.cpp">
+      <Filter>Gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\cMeshComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Component\cMovementComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\iComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameobject\iGameobject.h">
+      <Filter>Gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameobject\cCamera.h">
+      <Filter>Gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\cMeshComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
