@@ -33,7 +33,11 @@ DeclareConstantBuffer( g_constantBuffer_drawCall, 2 )
 //======
 
 DeclareInVariable( i_vertexPosition_local, float3, 0 )
-DeclareInVariable( i_vertexColor, float4, 1 )
+DeclareInVariable( i_vertexNormal, float3, 1 )
+DeclareInVariable( i_vertexTangent, float3, 2 )
+DeclareInVariable( i_vertexBiTangent, float3, 3 )
+DeclareInVariable( i_vertexUV, float2, 4 )
+DeclareInVariable( i_vertexColor, float4, 5 )
 
 // Output
 //======

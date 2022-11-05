@@ -16,6 +16,7 @@
 #include <maya/MIntArray.h>
 #include <maya/MItDag.h>
 #include <maya/MItMeshPolygon.h>
+#include <maya/MItDependencyGraph.h>
 #include <maya/MItSelectionList.h>
 #include <maya/MPlug.h>
 #include <maya/MPlugArray.h>
@@ -26,6 +27,10 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#include <maya/MFnLambertShader.h>
+#include <maya/MFnPhongShader.h>
+#include <maya/MFnBlinnShader.h>
 
 // Vertex Definition
 //==================
@@ -139,6 +144,20 @@ namespace
 		// As an example, the material node's name (which is useless) is currently stored
 		MString nodeName;
 
+		MColor	baseColor;
+		MString baseColorTexName;
+
+		MColor	specularColor;
+		MString	specularColorTexName;
+
+		MColor	ambient;
+		MString	ambientTexName;
+
+		MColor	transparency;
+		MString	transparencyTexName;
+
+		MString	normalTexName;
+
 		// Keep track of the the range of vertices and indices that use this material
 		// (the stored indices are for the final vertex buffer and index buffer vectors)
 		struct
@@ -149,6 +168,9 @@ namespace
 		{
 			size_t first = std::numeric_limits<size_t>::max(), last = 0;
 		} indexRange;
+
+		sMaterialInfo() : baseColor( 1.0f, 1.0f, 1.0f, 1.0f ), baseColorTexName( "" ), ambient( 0.0f, 0.0f, 0.0f, 1.0f ), ambientTexName( "" ), specularColor( 0.0f, 0.0f, 0.0f, 0.0f ), specularColorTexName( "" ),
+			transparency( 0.0f, 0.0f, 0.0f, 0.0f ), transparencyTexName( "" ), normalTexName( "" ) {}
 	};
 }
 
@@ -279,8 +301,131 @@ namespace
 
 						// For now this just gets the material node's name (which is useless),
 						// but this could be made more sophisticated
-						MFnDependencyNode materialNode( connections[0].node() );
+
+						MObject shaderNode = connections[0].node();
+
+						MFnDependencyNode materialNode( shaderNode );
 						o_material.nodeName = materialNode.name();
+
+						MPlugArray plugArray;
+
+						{
+							MStatus status = materialNode.getConnections( plugArray );
+							if ( status )
+							{
+								for ( unsigned int i = 0; i < plugArray.length(); i++ )
+								{
+									MPlug elementPlug = plugArray[i];
+									MGlobal::displayInfo( MString( "Plug with name " + elementPlug.name() ) );
+								}
+							}
+						}
+
+						// Color
+						{
+							MStatus status;
+							MPlug colorPlug = materialNode.findPlug( "color", findNetworkedPlugIfPossible, &status );
+							if ( status )
+							{
+								MItDependencyGraph itDG( colorPlug, MFn::kFileTexture, MItDependencyGraph::kUpstream, MItDependencyGraph::kBreadthFirst, MItDependencyGraph::kNodeLevel, &status );
+								if ( !status )
+								{
+									MGlobal::displayError( MString( "Failed to find the color plug." ) );
+									continue;
+								}
+
+								itDG.disablePruningOnFilter();
+
+								if ( !itDG.isDone() )
+								{
+									MObject textureNode = itDG.currentItem();
+									MPlug fileNamePlug = MFnDependencyNode( textureNode ).findPlug( "fileTextureName", findNetworkedPlugIfPossible, &status );
+									fileNamePlug.getValue( o_material.baseColorTexName );
+								}
+							}
+						}
+
+						// Color
+						{
+							MStatus status;
+							MPlug transparencyPlug = materialNode.findPlug( "transparency", findNetworkedPlugIfPossible, &status );
+							if ( status )
+							{
+								MItDependencyGraph itDG( transparencyPlug, MFn::kFileTexture, MItDependencyGraph::kUpstream, MItDependencyGraph::kBreadthFirst, MItDependencyGraph::kNodeLevel, &status );
+								if ( !status )
+								{
+									MGlobal::displayError( MString( "Failed to find the transparency plug." ) );
+									continue;
+								}
+
+								itDG.disablePruningOnFilter();
+
+								if ( !itDG.isDone() )
+								{
+									MObject textureNode = itDG.currentItem();
+									MPlug fileNamePlug = MFnDependencyNode( textureNode ).findPlug( "fileTextureName", findNetworkedPlugIfPossible, &status );
+									fileNamePlug.getValue( o_material.baseColorTexName );
+								}
+							}
+						}
+
+						// Ambient
+						{
+							MStatus status;
+							MPlug ambientColorPlug = materialNode.findPlug( "ambientColor", findNetworkedPlugIfPossible, &status );
+							if ( status )
+							{
+								MItDependencyGraph itDG( ambientColorPlug, MFn::kFileTexture, MItDependencyGraph::kUpstream, MItDependencyGraph::kBreadthFirst, MItDependencyGraph::kNodeLevel, &status );
+								if ( !status )
+								{
+									MGlobal::displayError( MString( "Failed to find the ambient plug." ) );
+									continue;
+								}
+
+								itDG.disablePruningOnFilter();
+
+								if ( !itDG.isDone() )
+								{
+									MObject textureNode = itDG.currentItem();
+									MPlug fileNamePlug = MFnDependencyNode( textureNode ).findPlug( "fileTextureName", findNetworkedPlugIfPossible, &status );
+									fileNamePlug.getValue( o_material.ambientTexName );
+								}
+							}
+						}
+
+						// Bump / normal map
+						{
+							MStatus status;
+							MPlug bumpPlug = materialNode.findPlug( "normalCamera", findNetworkedPlugIfPossible, &status );
+							if ( status )
+							{
+								MItDependencyGraph itDG( bumpPlug, MFn::kFileTexture, MItDependencyGraph::kUpstream, MItDependencyGraph::kBreadthFirst, MItDependencyGraph::kNodeLevel, &status );
+								if ( !status )
+								{
+									MGlobal::displayError( MString( "Failed to find the normal plug." ) );
+									continue;
+								}
+
+								itDG.disablePruningOnFilter();
+
+								if ( !itDG.isDone() )
+								{
+									MObject textureNode = itDG.currentItem();
+									MPlug fileNamePlug = MFnDependencyNode( textureNode ).findPlug( "fileTextureName", findNetworkedPlugIfPossible, &status );
+									fileNamePlug.getValue( o_material.normalTexName );
+								}
+							}
+						}
+
+						MFnLambertShader lambertShader( shaderNode, &status );
+
+						// Only export lambert shader now
+						if ( status )
+						{
+							if ( o_material.baseColorTexName == "" ) o_material.baseColor = lambertShader.color() * lambertShader.diffuseCoeff();
+							if ( o_material.transparencyTexName == "" ) o_material.transparency = lambertShader.transparency();
+							if ( o_material.ambientTexName == "" ) o_material.ambient = lambertShader.ambientColor();
+						}
 					}
 					else if ( connections.length() == 0 )
 					{
@@ -827,6 +972,38 @@ namespace
 					fout << " },\n";
 				}
 				fout << "\t},\n";
+
+				// Export materials data
+				fout << "\tmaterials =\n";
+				fout << "\t{\n";
+				for ( size_t idx = 0; idx < i_materialInfo.size(); ++idx )
+				{
+					const auto& material = i_materialInfo[idx];
+					fout << "\t\t{ ";
+
+					fout << "nodeName = \"" << material.nodeName << "\", ";
+
+					fout << "baseColor = { " << material.baseColor.r << ", " << material.baseColor.g << ", " << material.baseColor.b << " }, ",
+					fout << "baseColorTexName = \"" << material.baseColorTexName << "\", ";
+
+					fout << "specularColor = { " << material.specularColor.r << ", " << material.specularColor.g << ", " << material.specularColor.b << " }, ",
+					fout << "specularColorTexName = \"" << material.specularColorTexName << "\", ";
+
+					fout << "ambient = { " << material.ambient.r << ", " << material.ambient.g << ", " << material.ambient.b << " }, ",
+					fout << "ambientTexName = \"" << material.ambientTexName << "\", ";
+
+					fout << "normalTexName = \"" << material.normalTexName << "\", ";
+
+					fout << "transparency = { " << material.transparency.r << ", " << material.transparency.g << ", " << material.transparency.b << " }, ",
+					fout << "transparencyTexName = \"" << material.transparencyTexName << "\", ";
+
+					fout << "vertexRange = { " << material.vertexRange.first << ", " << material.vertexRange.last << " }, ";
+					fout << "indexRange = { " << material.indexRange.first << ", " << material.indexRange.last << " }, ";
+
+					fout << "},\n";
+				}
+				fout << "\t},\n";
+
 			}
 			// Close table
 			fout << "}" "\n";

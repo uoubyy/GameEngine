@@ -64,6 +64,7 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="cRenderTarget.cpp" />
     <ClCompile Include="sRenderCommand.cpp" />
+    <ClCompile Include="cMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cConstantBuffer.h" />
@@ -88,6 +89,8 @@
     <ClInclude Include="cEffect.h" />
     <ClInclude Include="cRenderTarget.h" />
     <ClInclude Include="sRenderCommand.h" />
+    <ClInclude Include="cMaterial.h" />
+    <ClInclude Include="sTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cRenderState.inl" />

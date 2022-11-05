@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="cConstantBuffer.cpp" />
     <ClCompile Include="cEffect.cpp" />
+    <ClCompile Include="cMaterial.cpp" />
     <ClCompile Include="cMesh.cpp" />
     <ClCompile Include="cRenderState.cpp" />
     <ClCompile Include="cRenderTarget.cpp" />
@@ -89,6 +90,7 @@
   <ItemGroup>
     <ClInclude Include="cConstantBuffer.h" />
     <ClInclude Include="cEffect.h" />
+    <ClInclude Include="cMaterial.h" />
     <ClInclude Include="cMesh.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="ConstantBufferFormats.h" />
@@ -101,6 +103,7 @@
     <ClInclude Include="OpenGL\Includes.h" />
     <ClInclude Include="sContext.h" />
     <ClInclude Include="sRenderCommand.h" />
+    <ClInclude Include="sTexture.h" />
     <ClInclude Include="VertexFormats.h" />
     <ClInclude Include="Windows\ExternalLibraries.win.h" />
   </ItemGroup>

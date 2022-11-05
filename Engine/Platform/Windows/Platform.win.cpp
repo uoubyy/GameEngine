@@ -3,6 +3,9 @@
 
 #include "../Platform.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../stb_image.h"
+
 #include <Engine/Windows/Functions.h>
 
 // Interface
@@ -75,4 +78,33 @@ eae6320::cResult eae6320::Platform::LoadBinaryFile( const char* const i_path, sD
 eae6320::cResult eae6320::Platform::WriteBinaryFile( const char* const i_path, const void* const i_data, const size_t i_size, std::string* const o_errorMessage )
 {
 	return Windows::WriteBinaryFile( i_path, i_data, i_size, o_errorMessage );
+}
+
+eae6320::cResult eae6320::Platform::LoadTextureFile( const char* const i_path, unsigned char*& o_data, int& o_width, int& o_height, int& o_components, int i_reqComponent, std::string* const o_errorMessage )
+{
+	eae6320::cResult result = eae6320::Results::Success;
+	const auto fileExist = Windows::DoesFileExist( i_path, o_errorMessage );
+
+	if ( !fileExist )
+	{
+		result = eae6320::Results::FileDoesntExist;
+		return result;
+	}
+
+#if defined( EAE6320_PLATFORM_GL )
+	stbi_set_flip_vertically_on_load(true);
+#endif
+
+	o_data = stbi_load( i_path, &o_width, &o_height, &o_components, i_reqComponent );
+	if ( !o_data )
+	{
+		result = eae6320::Results::Failure;
+		std::string filePath = i_path;
+		*o_errorMessage = "Failed to load texture " + filePath;
+		return result;
+	}
+
+	//o_data = reinterpret_cast<void*>( dataBuffer );
+
+	return result;
 }

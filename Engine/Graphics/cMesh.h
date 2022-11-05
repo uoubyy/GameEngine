@@ -25,6 +25,7 @@ namespace eae6320
 	namespace Graphics
 	{
 		class cVertexFormat;
+		class cMaterial;
 
 		namespace VertexFormats
 		{
@@ -84,10 +85,15 @@ namespace eae6320
 			
 			EAE6320_ASSETS_DECLAREREFERENCECOUNT();
 
+			// Data
+			//=====
+			cMaterial** m_materials = nullptr;
+			uint16_t m_materialsCount = 0;
+
 			// Initialization / Clean Up
 			//--------------------------
 
-			cResult Initialize( const VertexFormats::sVertex_mesh* i_vertexData, const void* i_indices, const uint32_t i_triangleCount, const uint32_t i_vertexCount );
+			cResult Initialize( const VertexFormats::sVertex_mesh* i_vertexData, const void* i_indices, const uint32_t i_triangleCount, const uint32_t i_vertexCount, const uint16_t i_materialsCount, cMaterial** i_materials );
 
 			cResult CleanUp();
 

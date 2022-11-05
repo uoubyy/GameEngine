@@ -2,6 +2,7 @@
 #include <Engine/UserInput/UserInput.h>
 
 eae6320::cCharacter::cCharacter()
+	: m_scale(1.0f, 1.0f, 1.0f)
 {
 
 }
@@ -53,7 +54,10 @@ eae6320::cResult eae6320::cCharacter::GenerateRenderData( eae6320::Graphics::sRe
 	auto result = m_meshComponent.GenerateRenderData( i_renderCommand );
 
 	if( result )
-		i_renderCommand.m_transformation = m_movementComponent.GetPredictTransform( i_elapsedSecondCount_sinceLastUpdate );
+	{ 
+		eae6320::Math::cMatrix_transformation scaleMatrix( m_scale );
+		i_renderCommand.m_transformation = scaleMatrix * m_movementComponent.GetPredictTransform( i_elapsedSecondCount_sinceLastUpdate );
+	}
 
 	return result;
 }

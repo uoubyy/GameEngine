@@ -2,6 +2,7 @@
 //=========
 
 #include "cMesh.h"
+#include "cMaterial.h"
 
 #include <Engine/Asserts/Asserts.h>
 #include <Engine/Concurrency/cMutex.h>
@@ -15,7 +16,7 @@
 
 namespace
 {
-	eae6320::cResult LoadMesh( const char* const i_path, eae6320::Graphics::VertexFormats::sVertex_mesh*& o_vertexData, void*& o_indices, uint32_t& o_triangleCount, uint32_t& o_vertexCount );
+	eae6320::cResult LoadMesh( const char* const i_path, eae6320::Graphics::VertexFormats::sVertex_mesh*& o_vertexData, void*& o_indices, uint32_t& o_triangleCount, uint32_t& o_vertexCount, uint16_t& o_materialsCount, eae6320::Graphics::cMaterial**& o_materials );
 }
 
 // Interface
@@ -80,10 +81,13 @@ eae6320::cResult eae6320::Graphics::cMesh::Load( const std::string& i_meshPath, 
 	uint32_t triangleCount = 0;
 	uint32_t vertexCount = 0;
 
-	LoadMesh( i_meshPath.c_str(), vertexData, indices, triangleCount, vertexCount );
+	uint16_t materialsCount = 0;
+	eae6320::Graphics::cMaterial** materials = nullptr;
+
+	LoadMesh( i_meshPath.c_str(), vertexData, indices, triangleCount, vertexCount, materialsCount, materials );
 
 	// Initialize the platform-specific graphics API mesh object
-	if ( !( result = newMesh->Initialize( vertexData, indices, triangleCount, vertexCount ) ) )
+	if ( !( result = newMesh->Initialize( vertexData, indices, triangleCount, vertexCount, materialsCount, materials ) ) )
 	{
 		EAE6320_ASSERTF( false, "Initialization of new mesh failed" );
 		return result;
@@ -114,7 +118,7 @@ eae6320::Graphics::cMesh::~cMesh()
 
 namespace
 {
-	eae6320::cResult LoadMesh( const char* const i_path, eae6320::Graphics::VertexFormats::sVertex_mesh*& o_vertexData, void*& o_indices, uint32_t& o_triangleCount, uint32_t& o_vertexCount )
+	eae6320::cResult LoadMesh( const char* const i_path, eae6320::Graphics::VertexFormats::sVertex_mesh*& o_vertexData, void*& o_indices, uint32_t& o_triangleCount, uint32_t& o_vertexCount, uint16_t& o_materialsCount, eae6320::Graphics::cMaterial**& o_materials )
 	{
 		auto result = eae6320::Results::Success;
 
@@ -166,11 +170,57 @@ namespace
 
 		memcpy( o_indices, reinterpret_cast<void*>( currentOffset ), dataSize * indexCount );
 
-		uint32_t* validIndices = nullptr;
-		if (is32)
+		currentOffset += dataSize * indexCount;
+		auto dataEndPoint = reinterpret_cast<uintptr_t>( dataFromFile.data );
+		dataEndPoint += dataFromFile.size;
+
+		// Extra materials
+		if ( currentOffset != dataEndPoint )
 		{
-			validIndices = reinterpret_cast<uint32_t*>(o_indices);
+			memcpy( &o_materialsCount, reinterpret_cast<void*>( currentOffset ), sizeof( uint16_t ) );
+			currentOffset += sizeof( uint16_t );
+
+			if( o_materialsCount > 0 )
+			{
+				o_materials = new (std::nothrow) eae6320::Graphics::cMaterial*[o_materialsCount];
+				if ( !o_materials )
+				{
+					result = eae6320::Results::OutOfMemory;
+					eae6320::Logging::OutputError( "Couldn't allocate memory for the materials data." );
+					return result;
+				}
+
+				for ( auto i = 0; i < o_materialsCount; ++i )
+				{
+					eae6320::Graphics::cMaterial* newMaterial;
+					uint32_t materialDataSize = 0;
+					if ( !( result = eae6320::Graphics::cMaterial::Load( reinterpret_cast<void*>( currentOffset ), materialDataSize, newMaterial ) ) )
+					{
+						return result;
+					}
+
+					currentOffset += materialDataSize;
+					o_materials[i] = newMaterial;
+				}
+			}
 		}
+
+		// test code
+		//if ( is32 )
+		//{
+		//	uint32_t* indices = static_cast<uint32_t*>( o_indices );
+		//	for ( size_t index = 0; index < indexCount; index += 3 )
+		//	{
+		//		eae6320::Graphics::VertexFormats::sVertex_mesh vector_01 = o_vertexData[indices[index]];
+		//		eae6320::Graphics::VertexFormats::sVertex_mesh vector_02 = o_vertexData[indices[index + 1]];
+		//		eae6320::Graphics::VertexFormats::sVertex_mesh vector_03 = o_vertexData[indices[index + 2]];
+
+		//		if ( ( vector_01.mat != vector_02.mat ) || ( vector_01.mat != vector_03.mat ) || ( vector_02.mat != vector_03.mat ) )
+		//		{
+		//			eae6320::Logging::OutputError( "Vertices of a triangle belong to different materials group." );
+		//		}
+		//	}
+		//}
 
 		return result;
 	}

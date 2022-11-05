@@ -36,12 +36,20 @@ namespace eae6320
 			// and more complex and bigger formats for more complicated shading).
 			struct sVertex_mesh
 			{
-				// POSITION
-				// 3 floats == 12 bytes
-				// Offset = 0
+				// Position
 				float x, y, z;
-
+				// Normal
+				float nx, ny, nz;
+				// Tangent
+				float tx, ty, tz;
+				// Bitangent
+				float btx, bty, btz;
+				// Texture coordinates
+				float u, v;
+				// Color
 				uint8_t r, g, b, a;
+				// Material
+				uint8_t mat;
 			};
 		}
 	}

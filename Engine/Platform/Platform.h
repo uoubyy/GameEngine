@@ -91,6 +91,8 @@ namespace eae6320
 		// If you need to write out more than one smaller chunk to a file, however,
 		// you should use one of the standard library functions that does buffering.
 		cResult WriteBinaryFile( const char* const i_path, const void* const i_data, const size_t i_size, std::string* const o_errorMessage = nullptr );
+
+		cResult LoadTextureFile( const char* const i_path, unsigned char*& o_data, int& o_width, int& o_height, int& o_components, int i_reqComponent, std::string* const o_errorMessage = nullptr );
 	}
 }
 

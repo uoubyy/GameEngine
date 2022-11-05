@@ -95,6 +95,9 @@ namespace eae6320
 		public:
 			void Bind();
 
+#if defined( EAE6320_PLATFORM_GL )
+			const GLuint GetShaderId() { return m_programId; }
+#endif
 		};
 	}
 }

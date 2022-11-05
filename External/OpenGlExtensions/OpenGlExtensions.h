@@ -71,6 +71,10 @@ extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 	extern PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
 #endif
 
+extern PFNGLUNIFORM1FPROC glUniform1f;
+extern PFNGLUNIFORM3FPROC glUniform3f;
+extern PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
+
 // Initialize / Clean Up
 //----------------------
 

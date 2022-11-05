@@ -2,6 +2,7 @@
 //=========
 
 #include "../cMesh.h"
+#include "../cMaterial.h"
 
 #include "../VertexFormats.h"
 
@@ -17,7 +18,7 @@
 // Initialize / Clean Up
 //----------------------
 
-eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVertex_mesh* i_vertexData, const void* i_indices, const uint32_t i_triangleCount, const uint32_t i_vertexCount )
+eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVertex_mesh* i_vertexData, const void* i_indices, const uint32_t i_triangleCount, const uint32_t i_vertexCount, const uint16_t i_materialsCount, cMaterial** i_materials )
 {
 	auto result = Results::Success;
 
@@ -159,13 +160,137 @@ eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVer
 			}
 		}
 
-		// Color (1)
+		// Normal (1)
 		{
 			constexpr GLuint vertexElementLocation = 1;
+			constexpr GLint elementCount = 3;
+
+			glVertexAttribPointer( vertexElementLocation, elementCount, GL_FLOAT, GL_FALSE, stride,
+				reinterpret_cast<GLvoid*>( offsetof( eae6320::Graphics::VertexFormats::sVertex_mesh, nx ) ) );
+			const auto errorCode = glGetError();
+			if ( errorCode == GL_NO_ERROR )
+			{
+				glEnableVertexAttribArray( vertexElementLocation );
+				const GLenum errorCode = glGetError();
+				if ( errorCode != GL_NO_ERROR )
+				{
+					result = eae6320::Results::Failure;
+					EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					eae6320::Logging::OutputError( "OpenGL failed to enable the NORMAL vertex attribute at location %u: %s",
+						vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					return result;
+				}
+			}
+			else
+			{
+				result = eae6320::Results::Failure;
+				EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				eae6320::Logging::OutputError( "OpenGL failed to set the NORMAL vertex attribute at location %u: %s",
+					vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				return result;
+			}
+		}
+
+		// Tangent (2)
+		{
+			constexpr GLuint vertexElementLocation = 2;
+			constexpr GLint elementCount = 3;
+
+			glVertexAttribPointer( vertexElementLocation, elementCount, GL_FLOAT, GL_FALSE, stride,
+				reinterpret_cast<GLvoid*>( offsetof( eae6320::Graphics::VertexFormats::sVertex_mesh, tx ) ) );
+			const auto errorCode = glGetError();
+			if ( errorCode == GL_NO_ERROR )
+			{
+				glEnableVertexAttribArray( vertexElementLocation );
+				const GLenum errorCode = glGetError();
+				if ( errorCode != GL_NO_ERROR )
+				{
+					result = eae6320::Results::Failure;
+					EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					eae6320::Logging::OutputError( "OpenGL failed to enable the TANGENT vertex attribute at location %u: %s",
+						vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					return result;
+				}
+			}
+			else
+			{
+				result = eae6320::Results::Failure;
+				EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				eae6320::Logging::OutputError( "OpenGL failed to set the TANGENT vertex attribute at location %u: %s",
+					vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				return result;
+			}
+		}
+
+		// BiTangent (3)
+		{
+			constexpr GLuint vertexElementLocation = 3;
+			constexpr GLint elementCount = 3;
+
+			glVertexAttribPointer( vertexElementLocation, elementCount, GL_FLOAT, GL_FALSE, stride,
+				reinterpret_cast<GLvoid*>( offsetof( eae6320::Graphics::VertexFormats::sVertex_mesh, btx ) ) );
+			const auto errorCode = glGetError();
+			if ( errorCode == GL_NO_ERROR )
+			{
+				glEnableVertexAttribArray( vertexElementLocation );
+				const GLenum errorCode = glGetError();
+				if ( errorCode != GL_NO_ERROR )
+				{
+					result = eae6320::Results::Failure;
+					EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					eae6320::Logging::OutputError( "OpenGL failed to enable the BITANGENT vertex attribute at location %u: %s",
+						vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					return result;
+				}
+			}
+			else
+			{
+				result = eae6320::Results::Failure;
+				EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				eae6320::Logging::OutputError( "OpenGL failed to set the BITANGENT vertex attribute at location %u: %s",
+					vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				return result;
+			}
+		}
+
+		// UV (4)
+		{
+			constexpr GLuint vertexElementLocation = 4;
+			constexpr GLint elementCount = 2;
+
+			glVertexAttribPointer( vertexElementLocation, elementCount, GL_FLOAT, GL_FALSE, stride,
+				reinterpret_cast<GLvoid*>( offsetof( eae6320::Graphics::VertexFormats::sVertex_mesh, u ) ) );
+			const auto errorCode = glGetError();
+			if ( errorCode == GL_NO_ERROR )
+			{
+				glEnableVertexAttribArray( vertexElementLocation );
+				const GLenum errorCode = glGetError();
+				if ( errorCode != GL_NO_ERROR )
+				{
+					result = eae6320::Results::Failure;
+					EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					eae6320::Logging::OutputError( "OpenGL failed to enable the UV vertex attribute at location %u: %s",
+						vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+					return result;
+				}
+			}
+			else
+			{
+				result = eae6320::Results::Failure;
+				EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				eae6320::Logging::OutputError( "OpenGL failed to set the UV vertex attribute at location %u: %s",
+					vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
+				return result;
+			}
+		}
+
+		// Color (5)
+		{
+			constexpr GLuint vertexElementLocation = 5;
 			constexpr GLint elementCount = 4;
 			//constexpr GLboolean notNormalized = GL_FALSE;	// The given floats should be used as-is
 			glVertexAttribPointer( vertexElementLocation, elementCount, GL_UNSIGNED_BYTE, GL_TRUE, stride,
-				reinterpret_cast<GLvoid*>( offsetof(eae6320::Graphics::VertexFormats::sVertex_mesh, r ) ) );
+				reinterpret_cast<GLvoid*>( offsetof( eae6320::Graphics::VertexFormats::sVertex_mesh, r ) ) );
 			const auto errorCode = glGetError();
 			if ( errorCode == GL_NO_ERROR )
 			{
@@ -249,6 +374,9 @@ eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVer
 
 	m_triangleCount = i_triangleCount;
 
+	m_materialsCount = i_materialsCount;
+	m_materials = i_materials;
+
 	return result;
 }
 
@@ -326,6 +454,19 @@ eae6320::cResult eae6320::Graphics::cMesh::CleanUp()
 		m_elementBufferId = 0;
 	}
 
+	{
+		for ( auto i = 0; i < m_materialsCount; ++i )
+		{
+			if ( m_materials[i] )
+			{
+				m_materials[i]->DecrementReferenceCount();
+				m_materials[i] = nullptr;
+			}
+		}
+
+		delete[] m_materials;
+	}
+
 	return result;
 }
 
@@ -350,7 +491,27 @@ void eae6320::Graphics::cMesh::Draw()
 			const GLvoid* const offset = 0;
 			constexpr unsigned int vertexCountPerTriangle = 3;
 
-			glDrawElements( mode, m_triangleCount * vertexCountPerTriangle, GL_UNSIGNED_SHORT, offset );
+			const auto indiceCnt = m_triangleCount * vertexCountPerTriangle;
+			bool is32 = indiceCnt > std::numeric_limits<uint16_t>::max() ? true : false;
+
+			if ( m_materialsCount > 0 )
+			{
+				for ( auto i = 0; i < m_materialsCount; ++i )
+				{
+					m_materials[i]->Bind();
+					uint32_t elementsCount = m_materials[i]->m_indexRange.last - m_materials[i]->m_indexRange.first + 1;
+					size_t elementSize = is32 ? sizeof(uint32_t) : sizeof(uint16_t);
+					glDrawElements( mode, elementsCount, is32 ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT, reinterpret_cast<GLvoid*>( m_materials[i]->m_indexRange.first * elementSize ) );
+				}
+			}
+			else
+			{ 
+				if ( indiceCnt > std::numeric_limits<uint16_t>::max() )
+					glDrawElements( mode, m_triangleCount * vertexCountPerTriangle, GL_UNSIGNED_INT, offset );
+				else
+					glDrawElements( mode, m_triangleCount * vertexCountPerTriangle, GL_UNSIGNED_SHORT, offset );
+			}
+
 			const auto errorCode = glGetError();
 			EAE6320_ASSERT( errorCode == GL_NO_ERROR );
 		}

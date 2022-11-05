@@ -14,9 +14,8 @@ return {
 	meshes = {
 		"Meshes/plane.mesh",
 		"Meshes/cube.mesh",
-		"Meshes/sphere.mesh",
 		"Meshes/helix.mesh",
-		"Meshes/chubby.mesh",
-		"Meshes/ancient_temple.mesh",
+		"Meshes/teapot.mesh",
+		"Meshes/Taser.mesh",
 	},
 }

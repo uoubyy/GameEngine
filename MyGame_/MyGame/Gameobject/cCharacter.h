@@ -34,8 +34,12 @@ namespace eae6320
 
 		void SetUpInput( bool i_inputEnable ) { m_inputEnabled = i_inputEnable; }
 
+		void SetUniformScale( float i_scale ) { m_scale = eae6320::Math::sVector( i_scale, i_scale, i_scale ); }
+
 	private:
 		bool m_inputEnabled = false;
+
+		eae6320::Math::sVector m_scale;
 	};
 }
 
