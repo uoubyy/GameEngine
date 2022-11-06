@@ -5,17 +5,16 @@
 return {
 	shaders =
 	{
-		{ path = "Shaders/Vertex/standard.shader", arguments = { "vertex" } },
-		{ path = "Shaders/Fragment/standard.shader", arguments = { "fragment" } },
-		{ path = "Shaders/Fragment/animatedColor.shader", arguments = { "fragment" } },
+		{ path = "Shaders/Vertex/lambert.shader", arguments = { "vertex" } },
+		{ path = "Shaders/Fragment/lambert.shader", arguments = { "fragment" } },
 
 		{ path = "Shaders/Vertex/vertexInputLayout_mesh.shader", arguments = { "vertex" } },
 	},
-	meshes = {
+	--[[meshes = {
 		"Meshes/plane.mesh",
 		"Meshes/cube.mesh",
 		"Meshes/helix.mesh",
 		"Meshes/teapot.mesh",
 		"Meshes/Taser.mesh",
-	},
+	},]]
 }

@@ -2,6 +2,7 @@
 //=========
 
 #include "../cMesh.h"
+#include "../cMaterial.h"
 
 #include "Includes.h"
 #include "../sContext.h"
@@ -18,7 +19,7 @@
 // Initialize / Clean Up
 //----------------------
 
-eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVertex_mesh* i_vertexData, const void* i_indices, const uint32_t i_triangleCount, const uint32_t i_vertexCount )
+eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVertex_mesh* i_vertexData, const void* i_indices, const uint32_t i_triangleCount, const uint32_t i_vertexCount, const uint16_t i_materialsCount, cMaterial** i_materials )
 {
 	auto* const direct3dDevice = eae6320::Graphics::sContext::g_context.direct3dDevice;
 	EAE6320_ASSERT( direct3dDevice );
@@ -117,6 +118,8 @@ eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVer
 	}
 
 	m_triangleCount = i_triangleCount;
+	m_materialsCount = i_materialsCount;
+	m_materials = i_materials;
 
 	return result;
 }
@@ -139,6 +142,19 @@ eae6320::cResult eae6320::Graphics::cMesh::CleanUp()
 	{
 		m_vertexFormat->DecrementReferenceCount();
 		m_vertexFormat = nullptr;
+	}
+
+	{
+		for ( auto i = 0; i < m_materialsCount; ++i )
+		{
+			if ( m_materials[i] )
+			{
+				m_materials[i]->DecrementReferenceCount();
+				m_materials[i] = nullptr;
+			}
+		}
+
+		delete[] m_materials;
 	}
 
 	return result;
@@ -184,11 +200,24 @@ void eae6320::Graphics::cMesh::Draw()
 		{
 			constexpr unsigned int vertexCountPerTriangle = 3;
 			unsigned int indexCountToRender = m_triangleCount * vertexCountPerTriangle;
+			bool is32 = indexCountToRender > std::numeric_limits<uint16_t>::max() ? true : false;
 
 			// It's possible to start streaming data in the middle of a vertex buffer
 			constexpr unsigned int indexOfFirstIndexToUse = 0;
 			constexpr unsigned int offsetToAddToEachIndex = 0;
-			direct3dImmediateContext->DrawIndexed( indexCountToRender, indexOfFirstIndexToUse, offsetToAddToEachIndex );
+
+			if ( m_materialsCount > 0 )
+			{
+				for ( auto i = 0; i < m_materialsCount; ++i )
+				{
+					m_materials[i]->Bind();
+					direct3dImmediateContext->DrawIndexed( m_materials[i]->m_indexRange.last - m_materials[i]->m_indexRange.first + 1, m_materials[i]->m_indexRange.first, offsetToAddToEachIndex );
+				}
+			}
+			else
+			{
+				direct3dImmediateContext->DrawIndexed( indexCountToRender, indexOfFirstIndexToUse, offsetToAddToEachIndex );
+			}
 		}
 	}
 }

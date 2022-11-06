@@ -51,7 +51,7 @@ eae6320::cResult eae6320::Graphics::cVertexFormat::Initialize( const eVertexType
 		{
 		case eVertexType::Mesh:
 			{
-				constexpr unsigned int vertexElementCount = 2;
+				constexpr unsigned int vertexElementCount = 5;
 				D3D11_INPUT_ELEMENT_DESC layoutDescription[vertexElementCount] = {};
 				{
 					// Slot 0
@@ -71,9 +71,48 @@ eae6320::cResult eae6320::Graphics::cVertexFormat::Initialize( const eVertexType
 						positionElement.InstanceDataStepRate = 0;	// (Must be zero for per-vertex data)
 					}
 
+					// NORMAL
+					{
+						auto& normalElement = layoutDescription[1];
+
+						normalElement.SemanticName = "NORMAL";
+						normalElement.SemanticIndex = 0;	// (Semantics without modifying indices at the end can always use zero)
+						normalElement.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+						normalElement.InputSlot = 0;
+						normalElement.AlignedByteOffset = offsetof( VertexFormats::sVertex_mesh, nx );
+						normalElement.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+						normalElement.InstanceDataStepRate = 0;	// (Must be zero for per-vertex data)
+					}
+
+					// TANGENT
+					{
+						auto& tangertElement = layoutDescription[2];
+
+						tangertElement.SemanticName = "TANGENT";
+						tangertElement.SemanticIndex = 0;	// (Semantics without modifying indices at the end can always use zero)
+						tangertElement.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+						tangertElement.InputSlot = 0;
+						tangertElement.AlignedByteOffset = offsetof( VertexFormats::sVertex_mesh, tx );
+						tangertElement.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+						tangertElement.InstanceDataStepRate = 0;	// (Must be zero for per-vertex data)
+					}
+
+					// TANGENT
+					{
+						auto& texcoordElement = layoutDescription[3];
+
+						texcoordElement.SemanticName = "TEXCOORD";
+						texcoordElement.SemanticIndex = 0;	// (Semantics without modifying indices at the end can always use zero)
+						texcoordElement.Format = DXGI_FORMAT_R32G32_FLOAT;
+						texcoordElement.InputSlot = 0;
+						texcoordElement.AlignedByteOffset = offsetof( VertexFormats::sVertex_mesh, u );
+						texcoordElement.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+						texcoordElement.InstanceDataStepRate = 0;	// (Must be zero for per-vertex data)
+					}
+
 					// COLOR
 					{
-						auto& colorElement = layoutDescription[1];
+						auto& colorElement = layoutDescription[4];
 
 						colorElement.SemanticName = "COLOR";
 						colorElement.SemanticIndex = 0;	// (Semantics without modifying indices at the end can always use zero)

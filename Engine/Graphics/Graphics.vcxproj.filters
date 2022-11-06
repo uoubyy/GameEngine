@@ -65,6 +65,15 @@
     <ClCompile Include="cRenderTarget.cpp" />
     <ClCompile Include="sRenderCommand.cpp" />
     <ClCompile Include="cMaterial.cpp" />
+    <ClCompile Include="OpenGL\cMaterial.gl.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D\cMaterial.d3d.cpp">
+      <Filter>Direct3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D\sTexture.d3d.cpp">
+      <Filter>Direct3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cConstantBuffer.h" />

@@ -23,24 +23,21 @@ DeclareConstantBuffer( g_constantBuffer_frame, 0 )
 // Input
 //======
 
-DeclareInVariable( o_vertexColor, float4, 1 )
+DeclareInVariable( i_vertex2frag, Vertex2FragData, 1 )
 
 // Output
 //=======
 DeclareOutVariable( o_color, float4, 0 )
+
+DeclareSampler2D( baseColorTexture, 0 )
+uniform float transparency;
+uniform float3 baseColor;
 
 // Entry Point
 //============
 
 frag_main(void)
 {
-	// Output solid white
-	// float r = sin( g_elapsedSecondCount_simulationTime ) * 0.5 + 0.5;
-	// float g = cos( g_elapsedSecondCount_simulationTime ) * 0.5 + 0.5;
-	// o_color = float4(
-	// 	// RGB (color)
-	// 	r, g, 1.0,
-	// 	// Alpha (opacity)
-	// 	1.0 );
-	o_color = o_vertexColor;
+	float3 albedo = tex2D( baseColorTexture, i_vertex2frag.uv ).rgb;
+	o_color = float4( albedo.r, albedo.g, albedo.b, 1.0 );
 }

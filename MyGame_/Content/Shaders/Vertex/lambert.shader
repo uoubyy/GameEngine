@@ -32,17 +32,12 @@ DeclareConstantBuffer( g_constantBuffer_drawCall, 2 )
 // Input
 //======
 
-DeclareInVariable( i_vertexPosition_local, float3, 0 )
-DeclareInVariable( i_vertexNormal, float3, 1 )
-DeclareInVariable( i_vertexTangent, float3, 2 )
-DeclareInVariable( i_vertexBiTangent, float3, 3 )
-DeclareInVariable( i_vertexUV, float2, 4 )
-DeclareInVariable( i_vertexColor, float4, 5 )
+DeclareInVariable( i_vertexData, App2VeretxData, 0 )
 
 // Output
 //======
 
-DeclareOutVariable( o_vertexColor, float4, 1 )
+DeclareOutVariable( o_vertex2frag, Vertex2FragData, 1 )
 
 
 // Entry Point
@@ -55,7 +50,7 @@ vertex_main(void)
 	{
 		// This will be done in a future assignment.
 		// For now, however, local space is treated as if it is the same as world space.
-		float4 vertexPosition_local = float4( i_vertexPosition_local, 1.0 );
+		float4 vertexPosition_local = float4( i_vertexData.position, 1.0 );
 		vertexPosition_world = mul( g_transform_localToWorld, vertexPosition_local );
 	}
 	// Calculate the position of this vertex projected onto the display
@@ -63,8 +58,13 @@ vertex_main(void)
 		// Transform the vertex from world space into camera space
 		float4 vertexPosition_camera = mul( g_transform_worldToCamera, vertexPosition_world );
 		// Project the vertex from camera space into projected space
-		o_vertexPosition_projected = mul( g_transform_cameraToProjected, vertexPosition_camera );
+		o_vertex2frag.position = mul( g_transform_cameraToProjected, vertexPosition_camera );
 	}
 
-	o_vertexColor = i_vertexColor;
+	o_vertex2frag.uv = i_vertexData.texcoord;
+	o_vertex2frag.color = i_vertexData.color;
+
+#if defined( EAE6320_PLATFORM_GL )
+	gl_Position = o_vertex2frag.position;
+#endif
 }

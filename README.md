@@ -9,6 +9,7 @@ My personal Game Engine project with a Maya Mesh Exporter plugin. It has well su
 ### Finished
 
 - [x] Export Maya mesh with materials to human-readable files.
+- [x] Uniform shader interface for GLSL and HLSL.
 - [x] Build human-readable mesh files into binary file.
 - [x] Load and parse mesh file, extra data into cMesh and cMaterial.
 - [x] Generate render commands in the game update thread and submit those commands to the render thread.

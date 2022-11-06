@@ -222,40 +222,11 @@ eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVer
 			}
 		}
 
-		// BiTangent (3)
+		// BiTangent
+
+		// UV (3)
 		{
 			constexpr GLuint vertexElementLocation = 3;
-			constexpr GLint elementCount = 3;
-
-			glVertexAttribPointer( vertexElementLocation, elementCount, GL_FLOAT, GL_FALSE, stride,
-				reinterpret_cast<GLvoid*>( offsetof( eae6320::Graphics::VertexFormats::sVertex_mesh, btx ) ) );
-			const auto errorCode = glGetError();
-			if ( errorCode == GL_NO_ERROR )
-			{
-				glEnableVertexAttribArray( vertexElementLocation );
-				const GLenum errorCode = glGetError();
-				if ( errorCode != GL_NO_ERROR )
-				{
-					result = eae6320::Results::Failure;
-					EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
-					eae6320::Logging::OutputError( "OpenGL failed to enable the BITANGENT vertex attribute at location %u: %s",
-						vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
-					return result;
-				}
-			}
-			else
-			{
-				result = eae6320::Results::Failure;
-				EAE6320_ASSERTF( false, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
-				eae6320::Logging::OutputError( "OpenGL failed to set the BITANGENT vertex attribute at location %u: %s",
-					vertexElementLocation, reinterpret_cast<const char*>( gluErrorString( errorCode ) ) );
-				return result;
-			}
-		}
-
-		// UV (4)
-		{
-			constexpr GLuint vertexElementLocation = 4;
 			constexpr GLint elementCount = 2;
 
 			glVertexAttribPointer( vertexElementLocation, elementCount, GL_FLOAT, GL_FALSE, stride,
@@ -284,9 +255,9 @@ eae6320::cResult eae6320::Graphics::cMesh::Initialize( const VertexFormats::sVer
 			}
 		}
 
-		// Color (5)
+		// Color (4)
 		{
-			constexpr GLuint vertexElementLocation = 5;
+			constexpr GLuint vertexElementLocation = 4;
 			constexpr GLint elementCount = 4;
 			//constexpr GLboolean notNormalized = GL_FALSE;	// The given floats should be used as-is
 			glVertexAttribPointer( vertexElementLocation, elementCount, GL_UNSIGNED_BYTE, GL_TRUE, stride,
@@ -491,8 +462,8 @@ void eae6320::Graphics::cMesh::Draw()
 			const GLvoid* const offset = 0;
 			constexpr unsigned int vertexCountPerTriangle = 3;
 
-			const auto indiceCnt = m_triangleCount * vertexCountPerTriangle;
-			bool is32 = indiceCnt > std::numeric_limits<uint16_t>::max() ? true : false;
+			const auto indexCountToRender = m_triangleCount * vertexCountPerTriangle;
+			bool is32 = indexCountToRender > std::numeric_limits<uint16_t>::max() ? true : false;
 
 			if ( m_materialsCount > 0 )
 			{

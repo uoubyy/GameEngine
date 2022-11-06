@@ -5,6 +5,13 @@
 //=========
 
 #include <cstdint>
+#include <Engine/Results/Results.h>
+
+#ifdef EAE6320_PLATFORM_D3D
+struct ID3D11Texture2D;
+struct ID3D11ShaderResourceView;
+struct ID3D11SamplerState;
+#endif
 
 namespace eae6320
 {
@@ -25,11 +32,16 @@ namespace eae6320
 
 		struct sTexture 
 		{
+#if defined( EAE6320_PLATFORM_D3D )
+			ID3D11Texture2D* m_texture = nullptr;
+			ID3D11ShaderResourceView* m_shaderResourceView = nullptr;
+			ID3D11SamplerState* m_samplerState = nullptr;
+#elif defined EAE6320_PLATFORM_GL
+			unsigned int m_textureID = 0;
+#endif
 			eTextureType m_textureType;
 
-			unsigned int m_textureID = 0;
-
-			char* m_textureFilePath = nullptr;
+			cResult CleanUp();
 		};
 	}
 }
