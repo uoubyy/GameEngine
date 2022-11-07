@@ -22,6 +22,16 @@ void eae6320::Runtime::cMovementComponent::SetVeolocity( const Math::sVector& i_
 	m_rigidBodystate.velocity = i_velocity;
 }
 
+void eae6320::Runtime::cMovementComponent::SetAcceleration( Math::sVector i_acceleration )
+{
+	m_rigidBodystate.acceleration = i_acceleration;
+}
+
+void eae6320::Runtime::cMovementComponent::SetAngularSpeed( const float i_angularSpeed )
+{
+	m_rigidBodystate.angularSpeed = i_angularSpeed;
+}
+
 void eae6320::Runtime::cMovementComponent::SetPosition( const Math::sVector& i_position)
 {
 	m_rigidBodystate.position = i_position;

@@ -31,6 +31,7 @@ namespace
 
 	// Constant buffer object
 	eae6320::Graphics::cConstantBuffer s_constantBuffer_frame( eae6320::Graphics::ConstantBufferTypes::Frame );
+	eae6320::Graphics::cConstantBuffer s_constantBuffer_material( eae6320::Graphics::ConstantBufferTypes::Material );
 	eae6320::Graphics::cConstantBuffer s_constantBuffer_drawCall( eae6320::Graphics::ConstantBufferTypes::DrawCall );
 
 	// Submission Data
@@ -104,20 +105,23 @@ void eae6320::Graphics::SubmitRenderCommands( const sRenderCommand* i_renderComm
 	for ( size_t i = 0; i < i_commandNums; ++i )
 	{
 		s_dataBeingSubmittedByApplicationThread->renderCommands[i + offset].m_mesh = i_renderCommands[i].m_mesh;
-		s_dataBeingSubmittedByApplicationThread->renderCommands[i + offset].m_effect = i_renderCommands[i].m_effect;
 		s_dataBeingSubmittedByApplicationThread->renderCommands[i + offset].m_transformation = i_renderCommands[i].m_transformation;
 	}
 	s_dataBeingSubmittedByApplicationThread->renderCommandNums += i_commandNums;
 
 }
 
-void eae6320::Graphics::SubmitCamera( const Math::cMatrix_transformation& i_g_transform_worldToCamera, const Math::cMatrix_transformation& i_g_transform_cameraToProjected )
+void eae6320::Graphics::SubmitCamera( const Math::cMatrix_transformation& i_g_transform_worldToCamera, const Math::cMatrix_transformation& i_g_transform_cameraToProjected, const eae6320::Math::sVector& i_g_camera_position )
 {
 	EAE6320_ASSERT( s_dataBeingSubmittedByApplicationThread );
 
 	auto& constantData_frame = s_dataBeingSubmittedByApplicationThread->constantData_frame;
 	constantData_frame.g_transform_worldToCamera = i_g_transform_worldToCamera;
 	constantData_frame.g_transform_cameraToProjected = i_g_transform_cameraToProjected;
+
+	constantData_frame.g_view_position[0] = i_g_camera_position.x;
+	constantData_frame.g_view_position[1] = i_g_camera_position.y;
+	constantData_frame.g_view_position[2] = i_g_camera_position.z;
 }
 
 eae6320::cResult eae6320::Graphics::WaitUntilDataForANewFrameCanBeSubmitted( const unsigned int i_timeToWait_inMilliseconds )
@@ -181,13 +185,18 @@ void eae6320::Graphics::RenderFrame()
 		auto& renderCommand = dataRequiredToRenderFrame->renderCommands[i];
 
 		auto& constantData_drawCall = dataRequiredToRenderFrame->constantData_drawCall;
-		constantData_drawCall.g_transform_localToWorld = renderCommand.m_transformation; 
+		constantData_drawCall.g_transform_localToWorld = renderCommand.m_transformation;
+
+		constantData_drawCall.g_light_position[0] = 10.0f;
+		constantData_drawCall.g_light_position[1] = 5.0f;
+		constantData_drawCall.g_light_position[2] = 0.0f;
+
+		constantData_drawCall.g_light_color[0] = 1.0f;
+		constantData_drawCall.g_light_color[1] = 1.0f;
+		constantData_drawCall.g_light_color[2] = 1.0f;
 
 		s_constantBuffer_drawCall.Bind( static_cast<uint_fast8_t>( eShaderType::Vertex ) | static_cast<uint_fast8_t>( eShaderType::Fragment ) );
 		s_constantBuffer_drawCall.Update( &constantData_drawCall );
-
-		if( renderCommand.m_effect )
-			renderCommand.m_effect->Bind();
 
 		EAE6320_ASSERT( renderCommand.m_mesh );
 		renderCommand.m_mesh->Draw();
@@ -237,6 +246,12 @@ eae6320::cResult eae6320::Graphics::Initialize( const sInitializationParameters&
 		else
 		{
 			EAE6320_ASSERTF( false, "Can't initialize Graphics without frame constant buffer" );
+			return result;
+		}
+
+		if ( !( result = s_constantBuffer_material.Initialize() ) )
+		{
+			EAE6320_ASSERTF( false, "Can't initialize Graphics without frame material buffer" );
 			return result;
 		}
 
@@ -301,6 +316,18 @@ eae6320::cResult eae6320::Graphics::CleanUp()
 			if ( result )
 			{
 				result = result_constantBuffer_frame;
+			}
+		}
+	}
+
+	{
+		const auto result_constantBuffer_material = s_constantBuffer_material.CleanUp();
+		if ( !result_constantBuffer_material )
+		{
+			EAE6320_ASSERT( false );
+			if ( result )
+			{
+				result = result_constantBuffer_material;
 			}
 		}
 	}

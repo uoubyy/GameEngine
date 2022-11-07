@@ -477,7 +477,7 @@ void eae6320::Graphics::cMesh::Draw()
 			}
 			else
 			{ 
-				if ( indiceCnt > std::numeric_limits<uint16_t>::max() )
+				if ( is32 )
 					glDrawElements( mode, m_triangleCount * vertexCountPerTriangle, GL_UNSIGNED_INT, offset );
 				else
 					glDrawElements( mode, m_triangleCount * vertexCountPerTriangle, GL_UNSIGNED_SHORT, offset );

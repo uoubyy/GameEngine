@@ -23,6 +23,7 @@
     <ClCompile Include="Component\cMovementComponent.cpp" />
     <ClCompile Include="Component\iComponent.cpp" />
     <ClCompile Include="Gameobject\cCamera.cpp" />
+    <ClCompile Include="Gameobject\cLightSource.cpp" />
     <ClCompile Include="Gameobject\iGameobject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="Component\cMovementComponent.h" />
     <ClInclude Include="Component\iComponent.h" />
     <ClInclude Include="Gameobject\cCamera.h" />
+    <ClInclude Include="Gameobject\cLightSource.h" />
     <ClInclude Include="Gameobject\iGameobject.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

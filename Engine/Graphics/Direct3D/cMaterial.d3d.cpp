@@ -109,6 +109,12 @@ void eae6320::Graphics::cMaterial::Bind()
 		direct3dImmediateContext->PSSetShaderResources( 0, 1, &m_baseColorTexture.m_shaderResourceView );
 		direct3dImmediateContext->PSSetSamplers( 0, 1, &m_baseColorTexture.m_samplerState );
 	}
+
+	if ( m_normalTexture.m_shaderResourceView && m_normalTexture.m_samplerState )
+	{
+		direct3dImmediateContext->PSSetShaderResources( 1, 1, &m_normalTexture.m_shaderResourceView );
+		direct3dImmediateContext->PSSetSamplers( 1, 1, &m_normalTexture.m_samplerState );
+	}
 }
 
 namespace
@@ -131,7 +137,7 @@ namespace
 				}
 			} );
 
-		auto result = eae6320::Platform::LoadTextureFile( i_path.c_str(), initialData, width, height, components, 0, &errorMessage );
+		auto result = eae6320::Platform::LoadTextureFile( i_path.c_str(), initialData, width, height, components, 4, &errorMessage );
 
 		if ( !result )
 		{

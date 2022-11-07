@@ -12,8 +12,6 @@ namespace eae6320
 		{
 			class cMesh* m_mesh = nullptr;
 
-			class cEffect* m_effect = nullptr;
-
 			eae6320::Math::cMatrix_transformation m_transformation;
 
 			cResult CleanUp();

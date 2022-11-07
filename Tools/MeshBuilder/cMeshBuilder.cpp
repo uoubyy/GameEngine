@@ -1083,7 +1083,26 @@ namespace
 
 			if ( lua_isstring( &io_luaState, -1 ) )
 			{
-				o_materials[i_index].specularColorTexName = lua_tostring( &io_luaState, -1 );
+				std::string specularTexName = lua_tostring( &io_luaState, -1 );
+				if ( !specularTexName.empty() )
+				{
+					std::string textureName, texturePath;
+					GetFilePathandFileName( specularTexName, texturePath, textureName );
+
+					std::string targetFilePath = i_targetPath + "/" + meshFileName + "/" + textureName;
+
+					std::string errorMessage;
+
+					eae6320::Platform::CreateDirectoryIfItDoesntExist( targetFilePath.c_str(), &errorMessage );
+
+					if ( !( result = eae6320::Platform::CopyFile( specularTexName.c_str(), targetFilePath.c_str(), false, true, &errorMessage ) ) )
+					{
+						eae6320::Assets::OutputErrorMessageWithFileInfo( specularTexName.c_str(), errorMessage.c_str() );
+						return result;
+					}
+
+					o_materials[i_index].specularColorTexName = meshFileName + "/" + textureName;
+				}
 			}
 			else
 			{

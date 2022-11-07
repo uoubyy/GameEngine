@@ -36,7 +36,7 @@ namespace eae6320
 			ID3D11Texture2D* m_texture = nullptr;
 			ID3D11ShaderResourceView* m_shaderResourceView = nullptr;
 			ID3D11SamplerState* m_samplerState = nullptr;
-#elif defined EAE6320_PLATFORM_GL
+#elif defined( EAE6320_PLATFORM_GL )
 			unsigned int m_textureID = 0;
 #endif
 			eTextureType m_textureType;

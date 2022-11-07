@@ -34,12 +34,25 @@ namespace eae6320
 				float g_elapsedSecondCount_simulationTime = 0.0f;
 				// For float4 alignment
 				float padding[2];
+
+				float g_view_position[3];
+			};
+
+			// Data that is constant for a material
+			struct sMaterial
+			{
+
 			};
 
 			// Data that is constant for a single draw call
 			struct sDrawCall
 			{
 				Math::cMatrix_transformation g_transform_localToWorld;
+
+				
+
+				float g_light_position[3];
+				float g_light_color[3];
 			};
 		}
 	}

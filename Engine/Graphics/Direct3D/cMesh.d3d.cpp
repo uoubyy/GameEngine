@@ -190,18 +190,19 @@ void eae6320::Graphics::cMesh::Draw()
 			// (meaning that every primitive is a triangle and will be defined by three vertices)
 			direct3dImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 		}
+
+		constexpr unsigned int vertexCountPerTriangle = 3;
+		unsigned int indexCountToRender = m_triangleCount * vertexCountPerTriangle;
+		bool is32 = indexCountToRender > std::numeric_limits<uint16_t>::max() ? true : false;
+
 		// Bind the index buffer
 		{
 			EAE6320_ASSERT( m_indexBuffer );
 			constexpr unsigned int offset = 0;
-			direct3dImmediateContext->IASetIndexBuffer( m_indexBuffer, DXGI_FORMAT_R16_UINT, offset );
+			direct3dImmediateContext->IASetIndexBuffer( m_indexBuffer, is32 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT, offset );
 		}
 		// Render triangles from the currently-bound index buffer
 		{
-			constexpr unsigned int vertexCountPerTriangle = 3;
-			unsigned int indexCountToRender = m_triangleCount * vertexCountPerTriangle;
-			bool is32 = indexCountToRender > std::numeric_limits<uint16_t>::max() ? true : false;
-
 			// It's possible to start streaming data in the middle of a vertex buffer
 			constexpr unsigned int indexOfFirstIndexToUse = 0;
 			constexpr unsigned int offsetToAddToEachIndex = 0;

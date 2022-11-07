@@ -205,23 +205,6 @@ namespace
 			}
 		}
 
-		// test code
-		//if ( is32 )
-		//{
-		//	uint32_t* indices = static_cast<uint32_t*>( o_indices );
-		//	for ( size_t index = 0; index < indexCount; index += 3 )
-		//	{
-		//		eae6320::Graphics::VertexFormats::sVertex_mesh vector_01 = o_vertexData[indices[index]];
-		//		eae6320::Graphics::VertexFormats::sVertex_mesh vector_02 = o_vertexData[indices[index + 1]];
-		//		eae6320::Graphics::VertexFormats::sVertex_mesh vector_03 = o_vertexData[indices[index + 2]];
-
-		//		if ( ( vector_01.mat != vector_02.mat ) || ( vector_01.mat != vector_03.mat ) || ( vector_02.mat != vector_03.mat ) )
-		//		{
-		//			eae6320::Logging::OutputError( "Vertices of a triangle belong to different materials group." );
-		//		}
-		//	}
-		//}
-
 		return result;
 	}
 }

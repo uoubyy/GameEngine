@@ -61,6 +61,18 @@ eae6320::Math::cMatrix_transformation eae6320::Math::cMatrix_transformation::Cre
 #endif
 }
 
+eae6320::Math::cMatrix_transformation eae6320::Math::cMatrix_transformation::CreateCameraToProjectedTransform_ortho( const float i_left, const float i_right, const float i_bottom, const float i_top, const float i_z_nearPlane, const float i_z_farPlane )
+{
+	const auto xDistanceScale = 1.0f / ( i_left - i_right );
+	const auto yDistanceScale = 1.0f / ( i_bottom - i_top );
+	const auto zDistanceScale = 1.0f / ( i_z_nearPlane - i_z_farPlane );
+	return cMatrix_transformation(
+		-2.0f * xDistanceScale, 1.0f, 1.0f, 1.0f,
+		1.0f, -2.0f * yDistanceScale, 1.0f, 1.0f,
+		1.0f, 1.0f, -2.0f * zDistanceScale, 1.0f,
+		( i_left + i_right ) * xDistanceScale, ( i_bottom + i_top ) * yDistanceScale, ( i_z_farPlane + i_z_farPlane ) * zDistanceScale, 1.0f );
+}
+
 // Initialize / Clean Up
 //----------------------
 

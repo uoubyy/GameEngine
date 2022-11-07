@@ -24,6 +24,9 @@
     <ClCompile Include="Component\cMeshComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="Gameobject\cLightSource.cpp">
+      <Filter>Gameobject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\cMovementComponent.h">
@@ -40,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="Component\cMeshComponent.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameobject\cLightSource.h">
+      <Filter>Gameobject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
