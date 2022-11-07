@@ -23,7 +23,7 @@ My personal Game Engine project with a Maya Mesh Exporter plugin. It has well su
 - [ ] Default lighting sources, Point Light and Directional Light.
 - [ ] Shadows and Soft-Shadows.
 - [ ] Deferred Shading.
--[ ] Screen-space ambient occlusion.
+- [ ] Screen-space ambient occlusion.
 
 ### Maybe
 
