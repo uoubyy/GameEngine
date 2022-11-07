@@ -22,11 +22,15 @@ DeclareConstantBuffer( g_constantBuffer_frame, 0 )
 	float g_elapsedSecondCount_simulationTime;
 	// For float4 alignment
 	float2 g_padding;
+	
+	float3 g_view_position;
 };
 
 DeclareConstantBuffer( g_constantBuffer_drawCall, 2 )
 {
     float4x4 g_transform_localToWorld;
+	float3 g_light_position;
+	float3 g_light_color;
 };
 
 // Input

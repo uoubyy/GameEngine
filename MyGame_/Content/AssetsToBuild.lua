@@ -10,11 +10,12 @@ return {
 
 		{ path = "Shaders/Vertex/vertexInputLayout_mesh.shader", arguments = { "vertex" } },
 	},
-	--[[meshes = {
-		"Meshes/plane.mesh",
-		"Meshes/cube.mesh",
-		"Meshes/helix.mesh",
-		"Meshes/teapot.mesh",
-		"Meshes/Taser.mesh",
-	},]]
+	meshes = {
+		--"Meshes/plane.mesh",
+		--"Meshes/cube.mesh",
+		--"Meshes/helix.mesh",
+		--"Meshes/teapot.mesh",
+		--"Meshes/Taser.mesh",
+		"Meshes/backpack.mesh",
+	},
 }

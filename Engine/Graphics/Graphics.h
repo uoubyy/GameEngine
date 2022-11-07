@@ -48,7 +48,7 @@ namespace eae6320
 
 		void SubmitRenderCommands( const sRenderCommand* i_renderCommands, const uint16_t i_commandNums );
 
-		void SubmitCamera( const eae6320::Math::cMatrix_transformation& i_g_transform_worldToCamera, const eae6320::Math::cMatrix_transformation& i_g_transform_cameraToProjected );
+		void SubmitCamera( const eae6320::Math::cMatrix_transformation& i_g_transform_worldToCamera, const eae6320::Math::cMatrix_transformation& i_g_transform_cameraToProjected, const eae6320::Math::sVector& i_g_camera_position );
 
 		// When the application is ready to submit data for a new frame
 		// it should call this before submitting anything

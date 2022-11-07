@@ -95,6 +95,13 @@ namespace eae6320
 				//			(i.e. where you don't notice things disappearing when the camera gets far away)
 				const float i_z_nearPlane, const float i_z_farPlane );
 
+			static cMatrix_transformation CreateCameraToProjectedTransform_ortho(
+				const float i_left,
+				const float i_right,
+				const float i_bottom,
+				const float i_top,
+				const float i_z_nearPlane, const float i_z_farPlane );
+
 			// Initialization / Clean Up
 			//--------------------------
 

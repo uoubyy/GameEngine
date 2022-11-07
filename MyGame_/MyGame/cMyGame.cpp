@@ -39,13 +39,7 @@ namespace
 
 	eae6320::Runtime::cCamera* s_targetCamera = nullptr;
 
-	eae6320::Graphics::cMesh* s_mesh1 = nullptr;
-	eae6320::Graphics::cMesh* s_mesh2 = nullptr;
-	eae6320::Graphics::cMesh* s_mesh3 = nullptr;
-
-	//eae6320::cCharacter s_pawn1;
-	eae6320::cCharacter s_pawn2;
-	// eae6320::cCharacter s_pawn3;
+	eae6320::cCharacter s_backpack;
 }
 
 void eae6320::cMyGame::UpdateBasedOnInput()
@@ -82,31 +76,6 @@ void eae6320::cMyGame::UpdateSimulationBasedOnInput()
 		return;
 	}
 
-	//if ( UserInput::IsKeyPressed( UserInput::KeyCodes::Num_1 ) )
-	//{
-	//	s_pawn1.m_meshComponent.SetVisible( true );
-	//	s_pawn2.m_meshComponent.SetVisible( false );
-	//}
-	//else if ( UserInput::IsKeyPressed( UserInput::KeyCodes::Num_2 ) )
-	//{
-	//	s_pawn1.m_meshComponent.SetVisible( false );
-	//	s_pawn2.m_meshComponent.SetVisible( true );
-	//}
-	//else
-	//{
-	//	s_pawn1.m_meshComponent.SetVisible( true );
-	//	s_pawn2.m_meshComponent.SetVisible( true );
-	//}
-
-	//if ( UserInput::IsKeyPressed( UserInput::KeyCodes::Num_3 ) )
-	//{
-	//	s_pawn1.m_meshComponent.ChangeMesh( s_mesh1 );
-	//}
-	//if ( UserInput::IsKeyPressed( UserInput::KeyCodes::Num_4 ) )
-	//{
-	//	s_pawn1.m_meshComponent.ChangeMesh( s_mesh2 );
-	//}
-
 	if ( UserInput::IsKeyPressed( UserInput::KeyCodes::Num_5 ) )
 	{
 		s_targetCamera = s_camera1;
@@ -118,18 +87,14 @@ void eae6320::cMyGame::UpdateSimulationBasedOnInput()
 
 	s_targetCamera->UpdateSimulationBasedOnInput();
 
-	//s_pawn1.UpdateSimulationBasedOnInput();
-	s_pawn2.UpdateSimulationBasedOnInput();
-	//s_pawn3.UpdateSimulationBasedOnInput();
+	s_backpack.UpdateSimulationBasedOnInput();
 }
 
 void eae6320::cMyGame::UpdateSimulationBasedOnTime( const float i_elapsedSecondCount_sinceLastUpdate )
 {
 	s_targetCamera->UpdateSimulationBasedOnTime( i_elapsedSecondCount_sinceLastUpdate );
 
-	//s_pawn1.UpdateSimulationBasedOnTime( i_elapsedSecondCount_sinceLastUpdate );
-	s_pawn2.UpdateSimulationBasedOnTime( i_elapsedSecondCount_sinceLastUpdate );
-	//s_pawn3.UpdateSimulationBasedOnTime( i_elapsedSecondCount_sinceLastUpdate );
+	s_backpack.UpdateSimulationBasedOnTime( i_elapsedSecondCount_sinceLastUpdate );
 }
 
 void eae6320::cMyGame::SubmitDataToBeRendered( const float i_elapsedSecondCount_systemTime, const float i_elapsedSecondCount_sinceLastSimulationUpdate )
@@ -145,21 +110,14 @@ void eae6320::cMyGame::SubmitDataToBeRendered( const float i_elapsedSecondCount_
 		eae6320::Graphics::SubmitClearColor( clearColor );
 	}
 
-	// If not visible, GenerateRenderData will failed
-	//if ( s_pawn1.GenerateRenderData( s_renderCommand[s_renderCommandNums], i_elapsedSecondCount_sinceLastSimulationUpdate ) )
-	//	s_renderCommandNums++;
-
-	if ( s_pawn2.GenerateRenderData( s_renderCommand[s_renderCommandNums], i_elapsedSecondCount_sinceLastSimulationUpdate ) )
+	if ( s_backpack.GenerateRenderData( s_renderCommand[s_renderCommandNums], i_elapsedSecondCount_sinceLastSimulationUpdate ) )
 		s_renderCommandNums++;
-
-	//if ( s_pawn3.GenerateRenderData(s_renderCommand[s_renderCommandNums], i_elapsedSecondCount_sinceLastSimulationUpdate ) )
-	//	s_renderCommandNums++;
 
 	int commandNums = s_renderCommandNums;
 
 	eae6320::Graphics::SubmitRenderCommands( s_renderCommand, commandNums );
 	
-	eae6320::Graphics::SubmitCamera( s_targetCamera->GetViewMatrix( i_elapsedSecondCount_sinceLastSimulationUpdate ), s_targetCamera->GetProjectionMatrix() );
+	eae6320::Graphics::SubmitCamera( s_targetCamera->GetViewMatrix( i_elapsedSecondCount_sinceLastSimulationUpdate ), s_targetCamera->GetProjectionMatrix(), s_targetCamera->m_movementComponent.GetPredictPosition( i_elapsedSecondCount_sinceLastSimulationUpdate ) );
 
 	s_renderCommandNums = 0;
 }
@@ -174,70 +132,14 @@ eae6320::cResult eae6320::cMyGame::Initialize()
 	const char* windowName = GetMainWindowName();
 	eae6320::Logging::OutputMessage( "My Game: \"%s\" start initialize.", windowName );
 
-	//{
-	//	if ( !( result = eae6320::Graphics::cMesh::Load( "data/Meshes/plane.dat", s_mesh1 ) ) )
-	//	{
-	//		EAE6320_ASSERTF( false, "Can't initialize mesh 1." );
-	//		return result;
-	//	}
-	//}
-
 	{
-		if ( !( result = eae6320::Graphics::cMesh::Load( "data/Meshes/Taser.dat", s_mesh2 ) ) )
-		{
-			EAE6320_ASSERTF( false, "Can't initialize mesh 2.");
-			return result;
-		}
+		s_backpack.m_meshComponent.ChangeMesh( "data/Meshes/backpack.dat" );
+		s_backpack.SetUpInput( true );
+		s_backpack.SetUniformScale( 0.8f );
+		eae6320::Math::sVector position( 0.0f, 2.0f, 0.0f );
+		s_backpack.m_movementComponent.SetPosition( position );
+		// s_backpack.m_movementComponent.SetAngularSpeed( 1.0f );
 	}
-
-	//{
-	//	if ( !( result = eae6320::Graphics::cMesh::Load( "data/Meshes/helix.dat", s_mesh3 ) ) )
-	//	{
-	//		EAE6320_ASSERTF(false, "Can't initialize mesh 3.");
-	//		return result;
-	//	}
-	//}
-
-	//if ( !( result = s_pawn1.m_meshComponent.InitializeShadingData( "data/Shaders/Vertex/standard.shader",
-	//	"data/Shaders/Fragment/animatedColor.shader" ) ) )
-	//{
-	//	EAE6320_ASSERTF( false, "Can't initialize shading data for pawn 1" );
-	//	return result;
-	//}
-
-	if ( !( result = s_pawn2.m_meshComponent.InitializeShadingData( "data/Shaders/Vertex/standard.shader",
-		"data/Shaders/Fragment/animatedColor.shader" ) ) )
-	{
-		EAE6320_ASSERTF( false, "Can't initialize shading data for pawn 2" );
-		return result;
-	}
-
-	//if ( !( result = s_pawn3.m_meshComponent.InitializeShadingData( "data/Shaders/Vertex/standard.shader",
-	//	"data/Shaders/Fragment/standard.shader" ) ) )
-	//{
-	//	EAE6320_ASSERTF( false, "Can't initialize shading data for pawn 3" );
-	//	return result;
-	//}
-
-	//{
-	//	s_pawn1.m_meshComponent.ChangeMesh( s_mesh1 );
-	//	eae6320::Math::sVector position( 0.0f, 0.0f, 0.0f );
-	//	s_pawn1.m_movementComponent.SetPosition( position );
-	//}
-
-	{
-		s_pawn2.m_meshComponent.ChangeMesh( s_mesh2 );
-		s_pawn2.SetUpInput( true );
-		s_pawn2.SetUniformScale( 0.1f );
-		eae6320::Math::sVector position( 0.0f, 20.0f, -10.0f );
-		s_pawn2.m_movementComponent.SetPosition( position );
-	}
-
-	//{
-	//	s_pawn3.m_meshComponent.ChangeMesh( s_mesh3 );
-	//	eae6320::Math::sVector position( -5.0f, 2.0f, -5.0f );
-	//	s_pawn3.m_movementComponent.SetPosition( position );
-	//}
 
 	if ( !( result = eae6320::Runtime::cCamera::Load( s_camera1 ) ) )
 	{
@@ -285,29 +187,7 @@ eae6320::cResult eae6320::cMyGame::CleanUp()
 		// Graphics will clean them
 	}
 
-	if ( s_mesh1 )
-	{
-		s_mesh1->DecrementReferenceCount();
-		s_mesh1 = nullptr;
-	}
-
-	if ( s_mesh2 )
-	{
-		s_mesh2->DecrementReferenceCount();
-		s_mesh2 = nullptr;
-	}
-
-	if ( s_mesh3 )
-	{
-		s_mesh3->DecrementReferenceCount();
-		s_mesh3 = nullptr;
-	}
-
-	//s_pawn1.CleanUp();
-
-	s_pawn2.CleanUp();
-
-	//s_pawn3.CleanUp();
+	s_backpack.CleanUp();
 
 	if ( s_camera1 )
 	{

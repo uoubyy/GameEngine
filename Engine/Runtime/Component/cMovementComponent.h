@@ -29,7 +29,15 @@ namespace eae6320
 
 			void SetVeolocity( const Math::sVector& i_velocity );
 
+			Math::sVector GetVeolocity() const { return m_rigidBodystate.velocity; }
+
+			void SetAcceleration( Math::sVector i_acceleration );
+
+			void SetAngularSpeed( const float i_angularSpeed );
+
 			void SetPosition( const Math::sVector& i_position );
+
+			Math::sVector GetPosition() const { return m_rigidBodystate.position; }
 
 			void SetRotation( const Math::cQuaternion& i_orientation );
 

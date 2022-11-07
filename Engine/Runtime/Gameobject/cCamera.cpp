@@ -84,6 +84,20 @@ void eae6320::Runtime::cCamera::UpdateSimulationBasedOnInput()
 	{
 		m_movementComponent.SetVeolocity( Math::sVector( -1.0f, 0.0f, 0.0f ) );
 	}
+	else if ( UserInput::IsKeyPressed( UserInput::KeyCodes::Control ) && UserInput::IsKeyPressed( UserInput::KeyCodes::W ) )
+	{
+		m_movementComponent.SetVeolocity( Math::sVector( 0.0f, 0.0f, 1.0f ) );
+	}
+	else if ( UserInput::IsKeyPressed( UserInput::KeyCodes::Control ) && UserInput::IsKeyPressed( UserInput::KeyCodes::S ) )
+	{
+		m_movementComponent.SetVeolocity( Math::sVector( 0.0f, 0.0f, -1.0f ) );
+	}
+	else
+	{
+		m_movementComponent.SetVeolocity( Math::sVector( 0.0f, 0.0f, 0.0f ) );
+		m_movementComponent.SetAngularSpeed( 0.0f );
+	}
+	return;
 }
 
 void eae6320::Runtime::cCamera::UpdateSimulationBasedOnTime( const float i_elapsedSecondCount_sinceLastUpdate )

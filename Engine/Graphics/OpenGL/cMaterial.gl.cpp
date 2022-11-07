@@ -160,6 +160,20 @@ void eae6320::Graphics::cMaterial::Bind()
 		glBindTexture( GL_TEXTURE_2D, m_baseColorTexture.m_textureID );
 	}
 
+	if ( m_normalTexture.m_textureID != 0 )
+	{
+		glActiveTexture( GL_TEXTURE1 );
+		glUniform1i( glGetUniformLocation( m_effect->GetShaderId(), "normalTexture" ), 1 );
+		glBindTexture( GL_TEXTURE_2D, m_normalTexture.m_textureID );
+	}
+
+	if ( m_specularColorTexture.m_textureID != 0 )
+	{
+		glActiveTexture( GL_TEXTURE2 );
+		glUniform1i( glGetUniformLocation( m_effect->GetShaderId(), "specularColorTexture" ), 2 );
+		glBindTexture( GL_TEXTURE_2D, m_specularColorTexture.m_textureID );
+	}
+
 	{
 		glUniform3f( glGetUniformLocation( m_effect->GetShaderId(), "baseColor" ), m_baseColor[0], m_baseColor[1], m_baseColor[2] );
 	}
@@ -167,34 +181,6 @@ void eae6320::Graphics::cMaterial::Bind()
 	{
 		glUniform1f( glGetUniformLocation( m_effect->GetShaderId(), "transparency" ), 1.0f - m_transparency[0] );
 	}
-	//if ( m_normalTexture.m_textureID != 0 )
-	//{
-	//	glActiveTexture( GL_TEXTURE1 );
-	//	auto errorCode = glGetError();
-	//	auto shaderId = m_effect->GetShaderId();
-	//	auto location = glGetUniformLocation( shaderId, "normalTexture" );
-	//	glUniform1i( glGetUniformLocation( shaderId, "normalTexture" ), 1 );
-	//	errorCode = glGetError();
-	//	glBindTexture( GL_TEXTURE_2D, m_normalTexture.m_textureID );
-	//}
-	//if ( m_specularColorTexture.m_textureID != 0 )
-	//{
-	//	glActiveTexture( GL_TEXTURE2 );
-	//	glUniform1i( glGetUniformLocation( m_effect->GetShaderId(), "specularColorTexture" ), 2 );
-	//	glBindTexture( GL_TEXTURE_2D, m_specularColorTexture.m_textureID );
-	//}
-	//if ( m_ambientColorTexture.m_textureID != 0 )
-	//{
-	//	glActiveTexture( GL_TEXTURE3 );
-	//	glUniform1i( glGetUniformLocation( m_effect->GetShaderId(), "ambientColorTexture" ), 3 );
-	//	glBindTexture( GL_TEXTURE_2D, m_ambientColorTexture.m_textureID );
-	//}
-	//if ( m_normalTexture.m_textureID != 0 )
-	//{
-	//	glActiveTexture( GL_TEXTURE4 );
-	//	glUniform1i( glGetUniformLocation( m_effect->GetShaderId(), "normalTexture" ), 4 );
-	//	glBindTexture( GL_TEXTURE_2D, m_normalTexture.m_textureID );
-	//}
 }
 
 namespace

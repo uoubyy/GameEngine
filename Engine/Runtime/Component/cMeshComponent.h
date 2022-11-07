@@ -39,13 +39,9 @@ namespace eae6320
 
 			~cMeshComponent();
 
-			eae6320::cResult InitializeGeometry( const Graphics::VertexFormats::sVertex_mesh* i_vertexData, const uint16_t* i_indices, const unsigned int i_triangleCount, const unsigned int i_vertexCount );
-
-			eae6320::cResult InitializeShadingData( const std::string& i_vertexShaderPath, const std::string& i_fragmentShaderPath );
+			eae6320::cResult ChangeMesh( const std::string& i_mesh_file_path );
 
 			eae6320::cResult ChangeMesh( class Graphics::cMesh* i_mesh );
-
-			eae6320::cResult ChangeEffect( class Graphics::cEffect* i_effect );
 
 			cResult GenerateRenderData( eae6320::Graphics::sRenderCommand& i_renderCommand );
 
@@ -59,7 +55,7 @@ namespace eae6320
 			// Data
 			class Graphics::cMesh* m_mesh = nullptr;
 
-			class Graphics::cEffect* m_effect = nullptr;
+			//class Graphics::cEffect* m_effect = nullptr;
 
 			bool m_visible = true;
 		};

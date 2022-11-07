@@ -91,9 +91,9 @@ eae6320::cResult eae6320::Platform::LoadTextureFile( const char* const i_path, u
 		return result;
 	}
 
-#if defined( EAE6320_PLATFORM_GL )
+//#if defined( EAE6320_PLATFORM_GL )
 	stbi_set_flip_vertically_on_load(true);
-#endif
+//#endif
 
 	o_data = stbi_load( i_path, &o_width, &o_height, &o_components, i_reqComponent );
 	if ( !o_data )
