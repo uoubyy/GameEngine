@@ -29,5 +29,20 @@ My personal Game Engine project with a Maya Mesh Exporter plugin. It has well su
 
 - [ ] PBR.
 
+## Setup and install
+
+* Download and install Maya 2019 and Maya 2019 devkit.
+* Set environment variable **MAYA_LOCATION** to the location Maya installed (e.g., C:\Program Files\Autodesk\Maya2019).
+* Set environment variable **MAYA_PLUG_IN_PATH** to where you want the Maya Mesh Exporter plugin be exported.
+* Set environment variable **DEVKIT_LOCATION** to the location where Maya 2019 devkit extracted.
+* Generate the MayaMeshExporter, it will be copied to **MAYA_PLUG_IN_PATH**.
+* Launch Maya and load the MayaMeshExporter plugin. Select the model and export it.
+* Open the mesh (human readable format, end with .mesh) file you exported from Maya, modify the material config (e.g., change the base color texture).
+* Copy the mesh file into the "MyGame_\Content\Meshes" dictionary and add it to the build list (AssetsToBuild.lua).
+* Build game assets for the target platform (it will convert the human readable format mesh files into binary files which end with .dat and copy textures to the game dictionary).
+* Assign your mesh to the target actor.
+* Runing the game.
+
+
 ## Support
 uoubyy@gmail.com
