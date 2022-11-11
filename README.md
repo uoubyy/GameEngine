@@ -4,7 +4,7 @@
 
 My personal Game Engine project with a Maya Mesh Exporter plugin. It has well support for both x64 (d3d11) and x32 (OpenGL) platforms. The Maya Mesh Exporter plugin is developed based on Maya 2019 but still works well for a higher version (need to include the newer Maya devkit and rebuild).
 
-![screenshot](https://i.imgur.com/oHRYg1D.mp4)
+[![screenshot]](https://i.imgur.com/oHRYg1D.mp4)
 
 ## Features and dev process
 
